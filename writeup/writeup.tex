@@ -103,9 +103,43 @@ are pushed in the vector containing the final matches.
 In our case, $\rho_\text{threshold} = 0.8$.
 
 \section*{Performance}
+Note: As stated by Andreas Haja,
+we do not take accuracy or the receiver operating characteristic (ROC) into account here.
+
 \subsection*{MP.7 Performance Evaluation 1}
+\textcolor{gray}{\textit{Count the number of keypoints on the preceding vehicle for all 10 images and take note of the distribution of their neighborhood size. Do this for all the detectors you have implemented.}}
+
+In order to complete this task, I added a command line argument which allows for the
+specification of the keypoint detector. That way, it is not necessary to recompile the program
+in order to change the detector.
+
+Furthermore, I keep track of all keypoints for all 10 images and compute the mean as well
+as the standard deviation of their size in order to assess the distribution of the
+keypoint's neighborhood size. The results are shown in Table~\ref{tab:performance_1}.
+
+\begin{table}
+	\caption{Keypoint distribution for different detectors.}
+	\label{tab:performance_1}
+	\begin{tabular}{l||r|r|r}
+		Keypoint & Average no. of  		& Average  		& Keypoint size	\\
+		Detector & keypoints per image 	& keypoint size 	& standard deviation 	\\
+		\hline \hline
+		SHITOMASI & & & \\
+		HARRIS & & & \\
+		FAST & & & \\
+		BRISK & & & \\
+		ORB & & & \\
+		AKAZE & & & \\
+		SIFT & & &
+	\end{tabular}
+\end{table}
+
 \subsection*{MP.8 Performance Evaluation 2}
+\textcolor{gray}{\textit{Count the number of matched keypoints for all 10 images using all possible combinations of detectors and descriptors. In the matching step, the BF approach is used with the descriptor distance ratio set to 0.8.}}
+
+
 \subsection*{MP.9 Performance Evaluation 3}
+\textcolor{gray}{\textit{Log the time it takes for keypoint detection and descriptor extraction. The results must be entered into a spreadsheet and based on this data, the TOP3 detector / descriptor combinations must be recommended as the best choice for our purpose of detecting keypoints on vehicles.}}
 
 
 \end{document}

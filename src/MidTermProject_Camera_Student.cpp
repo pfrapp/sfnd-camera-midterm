@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+#include <numeric>      // for std::accumulate
 #include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -40,9 +41,13 @@ int main(int argc, const char *argv[])
     RingBuffer<DataFrame, dataBufferSize> dataBuffer;   // list of data frames which are held in memory at the same time
     bool bVis = false;                                  // visualize results
 
-    /* MAIN LOOP OVER ALL IMAGES */
+    // For the last tasks regarding performance, we need some variables to keep track
+    // of the data over all images.
+    vector<cv::KeyPoint> all_keypoints;
 
-    for (size_t imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
+    /* MAIN LOOP OVER ALL IMAGES */
+    size_t imgIndex = 0;
+    for (; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
     {
         /* LOAD IMAGE INTO BUFFER */
 
@@ -72,6 +77,10 @@ int main(int argc, const char *argv[])
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
         string detectorType = "BRISK";
+        if (argc > 1) {
+            detectorType = argv[1];
+            cout << "Setting the keypoint detector type based on the command line: " << detectorType << "\n";
+        }
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
@@ -204,12 +213,34 @@ int main(int argc, const char *argv[])
                 cv::namedWindow(windowName, 7);
                 cv::imshow(windowName, matchImg);
                 cout << "Press key to continue to next image" << endl;
-                cv::waitKey(0); // wait for key to be pressed
+                // cv::waitKey(0); // wait for key to be pressed
             }
             bVis = false;
         }
 
+        // Collect some data for the performance statistics.
+        for (const cv::KeyPoint &kpt : keypoints) {
+            all_keypoints.push_back(kpt);
+        }
+
     } // eof loop over all images
+
+    cout << "*** Performance statistics summary ***\n";
+    cout << "There have been " << imgIndex << " images.\n";
+    float avg_num_keypoints_per_image = (float) all_keypoints.size() / ((float) imgIndex);
+    cout << "Average number of keypoints (on the vehicle) per image: " << avg_num_keypoints_per_image << "\n";
+    // Compute the mean
+    float avg_size = std::accumulate(all_keypoints.begin(), all_keypoints.end(), 0.0f, [](const float &val, const cv::KeyPoint &kpt) {
+            return (val + kpt.size);
+        }) / ((float) all_keypoints.size());
+    // Compute the sample standard deviation. See for instance here:
+    // https://www.statisticshowto.com/probability-and-statistics/descriptive-statistics/sample-variance/
+    float std_dev_size = std::accumulate(all_keypoints.begin(), all_keypoints.end(), 0.0f, [&avg_size](const float &val, const cv::KeyPoint &kpt) {
+            return (val + (kpt.size - avg_size) * (kpt.size - avg_size));
+        }) / ((float) (all_keypoints.size() - 1));
+    std_dev_size = std::sqrt(std_dev_size);
+    cout << "Average size of the keypoints (on the vehicle): " << avg_size << "\n";
+    cout << "Size of the keypoints (on the vehicle) standard deviation: " << std_dev_size << "\n";
 
     return 0;
 }
