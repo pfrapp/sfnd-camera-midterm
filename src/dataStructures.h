@@ -145,6 +145,10 @@ class RingBuffer {
         return it;
     }
 
+    // Access operator.
+    T& operator[](int idx) { return *data_[(first_ + idx) % capacity_]; }
+    const T& operator[](int idx) const { return *data_[(first_ + idx) % capacity_]; }
+
     // Get the size
     int size() const { return size_; }
     
@@ -184,6 +188,11 @@ inline void test_ringbuffer() {
     for (double d : rb) {
         std::cout << "* " << d << "\n";
     }
+    std::cout << "Current content of the ringbuffer:\n";
+    for (int ii=0; ii<rb.size(); ii++) {
+        std::cout << "* " << rb[ii] << "\n";
+    }
+
     rb.pop_front();
     rb.pop_front();
     std::cout << "Ringbuffer size = " << rb.size() << "\n";
