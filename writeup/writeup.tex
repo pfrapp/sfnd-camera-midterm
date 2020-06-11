@@ -47,7 +47,17 @@ When parameters had to be chose for the detectors, I used those from the precedi
 \subsection*{MP.3 Keypoint Removal}
 \textcolor{gray}{\textit{Remove all keypoints outside of a pre-defined rectangle and only use the keypoints within the rectangle for further processing.}}
 
-
+In order to solve this task, I created a second vector to hold keypoints.
+This vector will contain all keypoints within the rectangle.
+Note that I created this vector outside the if branch, in order to ensure that it does not
+loose its scope.
+The STL function \texttt{copy\_if} lends itself to copy only those keypoints to the new vector
+which are inside the rectangle.
+The function takes the original keypoint vector, the (in the beginning empty) keypoint vector
+for the points within the rectangle, as well as a lambda function that checks whether or
+not the keypoint is within the rectangle, which is computed by means of the OpenCV method \texttt{contains}.
+Finally, the keypoint vectors are swapped so that the original variable holds the keypoints
+within the rectangle.
 
 \section*{Descriptors}
 \subsection*{MP.4 Keypoint Descriptors}

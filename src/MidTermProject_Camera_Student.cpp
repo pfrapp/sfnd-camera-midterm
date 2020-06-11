@@ -81,22 +81,22 @@ int main(int argc, const char *argv[])
             detKeypointsShiTomasi(keypoints, imgGray, false);
         }
         else if (detectorType.compare("HARRIS") == 0) {
-            detKeypointsHarris(keypoints, imgGray, true);
+            detKeypointsHarris(keypoints, imgGray, false);
         }
         else if (detectorType.compare("FAST") == 0) {
-            detKeypointsFast(keypoints, imgGray, true);
+            detKeypointsFast(keypoints, imgGray, false);
         }
         else if (detectorType.compare("BRISK") == 0) {
-            detKeypointsBrisk(keypoints, imgGray, true);
+            detKeypointsBrisk(keypoints, imgGray, false);
         }
         else if (detectorType.compare("ORB") == 0) {
-            detKeypointsOrb(keypoints, imgGray, true);
+            detKeypointsOrb(keypoints, imgGray, false);
         }
         else if (detectorType.compare("AKAZE") == 0) {
-            detKeypointsAkaze(keypoints, imgGray, true);
+            detKeypointsAkaze(keypoints, imgGray, false);
         }
         else if (detectorType.compare("SIFT") == 0) {
-            detKeypointsSift(keypoints, imgGray, true);
+            detKeypointsSift(keypoints, imgGray, false);
         } else {
             std::cerr << "\n *** Error: You requested an invalid keypoint detector by providing " << detectorType;
             std::cerr << "\n *** Allowed keypoint detectors are: SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT\n\n";
@@ -110,9 +110,13 @@ int main(int argc, const char *argv[])
         // only keep keypoints on the preceding vehicle
         bool bFocusOnVehicle = true;
         cv::Rect vehicleRect(535, 180, 180, 150);
+        vector<cv::KeyPoint> keypoints_on_vehicle;
         if (bFocusOnVehicle)
         {
-            // ...
+            std::copy_if(keypoints.begin(), keypoints.end(), std::back_inserter(keypoints_on_vehicle), [&vehicleRect](const cv::KeyPoint& kpt) {
+                return vehicleRect.contains(cv::Point2i((int) kpt.pt.x, (int) kpt.pt.y));
+            });
+            std::swap(keypoints_on_vehicle, keypoints);
         }
 
         //// EOF STUDENT ASSIGNMENT
