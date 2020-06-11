@@ -128,6 +128,18 @@ int main(int argc, const char *argv[])
             std::swap(keypoints_on_vehicle, keypoints);
         }
 
+        // For the performance evaluation, draw the keypoints and save an image.
+        // The image files are used for the writeup / readme.
+        if (true) {
+            cv::Mat visImage = img.clone();
+            cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+            string windowName = detectorType + " Results";
+            cv::namedWindow(windowName, 6);
+            imshow(windowName, visImage);
+            cv::imwrite(dataPath + "writeup/keypoints/" + detectorType + ".jpg", visImage);
+            // cv::waitKey(0);
+        }
+
         //// EOF STUDENT ASSIGNMENT
 
         // optional : limit number of keypoints (helpful for debugging and learning)

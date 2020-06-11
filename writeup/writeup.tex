@@ -2,6 +2,7 @@
 
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
 
 \title{Camera Based 2D Feature Tracking ReadMe}
 \author{Philipp Rapp}
@@ -115,24 +116,70 @@ in order to change the detector.
 
 Furthermore, I keep track of all keypoints for all 10 images and compute the mean as well
 as the standard deviation of their size in order to assess the distribution of the
-keypoint's neighborhood size. The results are shown in Table~\ref{tab:performance_1}.
+keypoint's neighborhood size. The results are shown in Table~\ref{tab:performance_1}
+as well as in Figures~\ref{fig:shi_tomasi_keypoints} to \ref{fig:sift_keypoints}.
 
 \begin{table}
-	\caption{Keypoint distribution for different detectors.}
+	\caption{Keypoint number and size distribution for different detectors.}
 	\label{tab:performance_1}
 	\begin{tabular}{l||r|r|r}
 		Keypoint & Average no. of  		& Average  		& Keypoint size	\\
 		Detector & keypoints per image 	& keypoint size 	& standard deviation 	\\
 		\hline \hline
-		SHITOMASI & & & \\
-		HARRIS & & & \\
-		FAST & & & \\
-		BRISK & & & \\
-		ORB & & & \\
-		AKAZE & & & \\
-		SIFT & & &
+		SHITOMASI & 117.9 & 4 & 0 \\
+		HARRIS & 24.8 & 6 & 0 \\
+		FAST & 149.1 & 7 & 0 \\
+		BRISK & 271.3 & 22.05 & 14.67 \\
+		ORB & 115 & 55.95 & 25.22 \\
+		AKAZE & 165.5 & 7.69 & 3.53 \\
+		SIFT & 137.2 & 5.05 & 6.01 \\
+		\hline
 	\end{tabular}
 \end{table}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\columnwidth]{./keypoints/SHITOMASI}
+	\caption{Shi-Tomasi keypoints.}
+	\label{fig:shi_tomasi_keypoints}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\columnwidth]{./keypoints/HARRIS}
+	\caption{Harris keypoints.}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\columnwidth]{./keypoints/FAST}
+	\caption{FAST keypoints.}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\columnwidth]{./keypoints/BRISK}
+	\caption{BRISK keypoints.}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\columnwidth]{./keypoints/ORB}
+	\caption{ORB keypoints.}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\columnwidth]{./keypoints/AKAZE}
+	\caption{AKAZE keypoints.}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\columnwidth]{./keypoints/SIFT}
+	\caption{SIFT keypoints.}
+	\label{fig:sift_keypoints}
+\end{figure}
 
 \subsection*{MP.8 Performance Evaluation 2}
 \textcolor{gray}{\textit{Count the number of matched keypoints for all 10 images using all possible combinations of detectors and descriptors. In the matching step, the BF approach is used with the descriptor distance ratio set to 0.8.}}
