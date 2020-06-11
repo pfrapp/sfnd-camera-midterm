@@ -184,6 +184,35 @@ as well as in Figures~\ref{fig:shi_tomasi_keypoints} to \ref{fig:sift_keypoints}
 \subsection*{MP.8 Performance Evaluation 2}
 \textcolor{gray}{\textit{Count the number of matched keypoints for all 10 images using all possible combinations of detectors and descriptors. In the matching step, the BF approach is used with the descriptor distance ratio set to 0.8.}}
 
+The number of \emph{matched keypoints} for all 10 images (in total)
+is depicted in Table~\ref{tab:performance_2}.
+
+Note: According to the OpenCV documentation,
+the AKAZE descriptors can only be used with KAZE or AKAZE keypoints.
+This is why the AKAZE descriptor column contains N/As everywhere except
+for the AKAZE detector.
+
+Second note: There was also a problem when using the SIFT detector
+in conjunction with the ORB descriptor, as OpenCV raises an error in this case.
+
+
+\begin{table}
+	\caption{Number of matched keypoints for all 10 images (in total).
+		The rows are the detectors, and the columns are the descriptors.}
+	\label{tab:performance_2}
+	\begin{tabular}{l||r|r|r|r|r|r}
+		 			& BRISK & BRIEF & ORB & FREAK & AKAZE & SIFT	\\
+		\hline \hline
+		SHITOMASI 	& 770 & 947 & 908 & 770 & N/A & 927 \\
+		HARRIS 		& 143 & 174 & 163 & 145 & N/A & 163 \\
+		FAST 		& 901 & 1103 & 1079 & 881 & N/A & 1046 \\
+		BRISK 		& 1549 & 1694 & 1488 & 1499 & N/A & 1617 \\
+		ORB 			& 744 & 553 & 759 & 416 & N/A & 756 \\
+		AKAZE 		& 1206 & 1267 & 1181 & 1184 & 1249 & 1263 \\
+		SIFT 		& 588 & 708 & N/A & 593 & N/A & 792 \\
+		\hline
+	\end{tabular}
+\end{table}
 
 \subsection*{MP.9 Performance Evaluation 3}
 \textcolor{gray}{\textit{Log the time it takes for keypoint detection and descriptor extraction. The results must be entered into a spreadsheet and based on this data, the TOP3 detector / descriptor combinations must be recommended as the best choice for our purpose of detecting keypoints on vehicles.}}

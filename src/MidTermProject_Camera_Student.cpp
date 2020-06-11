@@ -44,6 +44,7 @@ int main(int argc, const char *argv[])
     // For the last tasks regarding performance, we need some variables to keep track
     // of the data over all images.
     vector<cv::KeyPoint> all_keypoints;
+    int total_number_matched_keypoints = 0;
 
     /* MAIN LOOP OVER ALL IMAGES */
     size_t imgIndex = 0;
@@ -130,7 +131,7 @@ int main(int argc, const char *argv[])
 
         // For the performance evaluation, draw the keypoints and save an image.
         // The image files are used for the writeup / readme.
-        if (true) {
+        if (false) {
             cv::Mat visImage = img.clone();
             cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
             string windowName = detectorType + " Results";
@@ -167,7 +168,11 @@ int main(int argc, const char *argv[])
         //// -> BRIEF, ORB, FREAK, AKAZE, SIFT
 
         cv::Mat descriptors;
-        string descriptorType = "BRISK"; // BRIEF, ORB, FREAK, AKAZE, SIFT
+        string descriptorType = "BRISK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+        if (argc > 2) {
+            descriptorType = argv[2];
+            cout << "Setting the descriptor type based on the command line: " << descriptorType << "\n";
+        }
         DescriptorType dt;
         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType, dt);
         //// EOF STUDENT ASSIGNMENT
@@ -183,7 +188,7 @@ int main(int argc, const char *argv[])
             /* MATCH KEYPOINT DESCRIPTORS */
 
             vector<cv::DMatch> matches;
-            string matcherType = "MAT_FLANN";        // MAT_BF, MAT_FLANN
+            string matcherType = "MAT_BF";        // MAT_BF, MAT_FLANN
             string descriptorType; // DES_BINARY, DES_HOG
             switch(dt) {
                 case DescriptorType::BINARY:
@@ -202,6 +207,9 @@ int main(int argc, const char *argv[])
             matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
                              matches, descriptorType, matcherType, selectorType);
+
+            // Count the total number of matches for the performance evaulation statistics
+            total_number_matched_keypoints += matches.size();
 
             //// EOF STUDENT ASSIGNMENT
 
@@ -230,6 +238,10 @@ int main(int argc, const char *argv[])
             bVis = false;
         }
 
+        if (imgIndex==9) {
+            cerr << "Detector: " << detectorType << ", Descriptor: " << descriptorType << "\n";
+        }
+
         // Collect some data for the performance statistics.
         for (const cv::KeyPoint &kpt : keypoints) {
             all_keypoints.push_back(kpt);
@@ -239,6 +251,7 @@ int main(int argc, const char *argv[])
 
     cout << "*** Performance statistics summary ***\n";
     cout << "There have been " << imgIndex << " images.\n";
+    cout << "=== Total number of matched keypoints: " << total_number_matched_keypoints << " ===\n";
     float avg_num_keypoints_per_image = (float) all_keypoints.size() / ((float) imgIndex);
     cout << "Average number of keypoints (on the vehicle) per image: " << avg_num_keypoints_per_image << "\n";
     // Compute the mean

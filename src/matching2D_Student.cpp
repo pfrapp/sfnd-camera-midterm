@@ -16,7 +16,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         // int normType = cv::NORM_HAMMING;
         int normType = descriptorType.compare("DES_BINARY") == 0 ? cv::NORM_HAMMING : cv::NORM_L2;
         matcher = cv::BFMatcher::create(normType, crossCheck);
-        cerr << "Brute-force matching\n";
+        cout << "Brute-force matching\n";
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
     {
@@ -30,7 +30,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         }
 
         matcher = cv::FlannBasedMatcher::create();
-        cerr << "FLANN matching\n";
+        cout << "FLANN matching\n";
     }
 
     // perform matching task
@@ -115,7 +115,7 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
 
     } else {
         std::cerr << "\n *** Error: You requested an invalid descriptor by providing " << descriptorType;
-        std::cerr << "\n *** Allowed keypoint detectors are: BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT\n\n";
+        std::cerr << "\n *** Allowed keypoint descriptors are: BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT\n\n";
         return;
     }
 
