@@ -20,6 +20,18 @@ The document at hand represents the readme file.
 \subsection*{MP.1 Data Buffer Optimization}
 \textit{Implement a vector for dataBuffer objects whose size does not exceed a limit (e.g. 2 elements). This can be achieved by pushing in new elements on one end and removing elements on the other end.}
 
+In order to solve this task, I decided to implement a ring buffer.
+A ring buffer can be implemented by creating a plain array with a fixed capacity (in this case 2 elements)
+and keeping track of
+\begin{itemize}
+	\item the current first entry (the head) and
+	\item the occupied slots (the size).
+\end{itemize}
+In order to have reusable code, I used a template for both the data type as well as
+for the capacity.
+In order to have the same ease of use as for the STL vector, I also implemented a (non-complete)
+iterator class for the ring buffer.
+
 \section*{Keypoints}
 \subsection*{MP.2 Keypoint Detection}
 \subsection*{MP.3 Keypoint Removal}
