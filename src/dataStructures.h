@@ -5,6 +5,18 @@
 #include <opencv2/core.hpp>
 
 
+// Enumeration for the descriptor type, which can be
+// either histogram of orineted gradients (HOG) or
+// binary.
+// An overbiew about which is which can be found for instance here:
+// https://www.uio.no/studier/emner/matnat/its/TEK5030/v19/lect/lecture_4_1_feature_descriptors.pdf
+// HOG: SIFT, SURF
+// Binary: BRIEF, ORB, BRISK, FREAK, AKAZE
+enum class DescriptorType {
+    HOG,
+    BINARY
+};
+
 struct DataFrame { // represents the available sensor information at the same time instance
     
     cv::Mat cameraImg; // camera image

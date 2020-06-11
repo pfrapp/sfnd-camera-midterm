@@ -61,6 +61,15 @@ within the rectangle.
 
 \section*{Descriptors}
 \subsection*{MP.4 Keypoint Descriptors}
+\textcolor{gray}{\textit{Implement descriptors BRIEF, ORB, FREAK, AKAZE and SIFT and make them selectable by setting a string accordingly.}}
+
+I solved this task by implementing an if-else branch (with lots of else cases).
+While I was at it, I also added another output argument of type \texttt{DescriptorType}
+which specifies whether the descriptor is a binary descriptor or wheter it is a HOG
+(histogram of oriented gradients) descriptor.
+This comes in handy later, as it avoids the manual and therefore error-prone specification
+of the descriptor type when matching keypoints.
+
 \subsection*{MP.5 Descriptor Matching}
 \subsection*{MP.6 Descriptor Distance Ratio}
 

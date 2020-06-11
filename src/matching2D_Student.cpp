@@ -35,23 +35,49 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
 }
 
 // Use one of several types of state-of-art descriptors to uniquely identify keypoints
-void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors, string descriptorType)
+void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors,
+    string descriptorType, DescriptorType &dt)
 {
     // select appropriate descriptor
     cv::Ptr<cv::DescriptorExtractor> extractor;
     if (descriptorType.compare("BRISK") == 0)
     {
+        dt = DescriptorType::BINARY;
 
         int threshold = 30;        // FAST/AGAST detection threshold score.
         int octaves = 3;           // detection octaves (use 0 to do single scale)
         float patternScale = 1.0f; // apply this scale to the pattern used for sampling the neighbourhood of a keypoint.
 
         extractor = cv::BRISK::create(threshold, octaves, patternScale);
-    }
-    else
-    {
+    } else if (descriptorType.compare("BRIEF") == 0) {
+        dt = DescriptorType::BINARY;
 
-        //...
+        extractor = cv::xfeatures2d::BriefDescriptorExtractor::create();
+        
+    } else if (descriptorType.compare("ORB") == 0) {
+        dt = DescriptorType::BINARY;
+
+        extractor = cv::ORB::create();
+
+    } else if (descriptorType.compare("FREAK") == 0) {
+        dt = DescriptorType::BINARY;
+
+        extractor = cv::xfeatures2d::FREAK::create();
+
+    } else if (descriptorType.compare("AKAZE") == 0) {
+        dt = DescriptorType::BINARY;
+
+        extractor = cv::AKAZE::create();
+
+    } else if (descriptorType.compare("SIFT") == 0) {
+        dt = DescriptorType::HOG;
+
+        extractor = cv::xfeatures2d::SIFT::create();
+
+    } else {
+        std::cerr << "\n *** Error: You requested an invalid descriptor by providing " << descriptorType;
+        std::cerr << "\n *** Allowed keypoint detectors are: BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT\n\n";
+        return;
     }
 
     // perform feature description
