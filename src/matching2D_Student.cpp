@@ -213,7 +213,27 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 
 
 void detKeypointsFast(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis) {
+    // Setup up the parameters like in the 'detect_keypoints' exercise.
+    int threshold_fast = 30;
+    int bNMS = true;    // activate non-maximum suppression
+    cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16;
+    shared_ptr<cv::FastFeatureDetector> fast_detector =
+            cv::FastFeatureDetector::create(threshold_fast, bNMS, type);
+    
+    double t = (double)cv::getTickCount();
+    fast_detector->detect(img, keypoints);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "FAST detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
+    // visualize results
+    if (bVis) {
+        cv::Mat visImage = img.clone();
+        cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+        string windowName = "FAST Detector Results";
+        cv::namedWindow(windowName, 6);
+        imshow(windowName, visImage);
+        cv::waitKey(0);
+    }
 }
 
 void detKeypointsBrisk(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis) {
