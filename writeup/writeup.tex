@@ -18,7 +18,7 @@ The document at hand represents the readme file.
 
 \section*{Data Buffer}
 \subsection*{MP.1 Data Buffer Optimization}
-\textit{Implement a vector for dataBuffer objects whose size does not exceed a limit (e.g. 2 elements). This can be achieved by pushing in new elements on one end and removing elements on the other end.}
+\textcolor{gray}{\textit{Implement a vector for dataBuffer objects whose size does not exceed a limit (e.g. 2 elements). This can be achieved by pushing in new elements on one end and removing elements on the other end.}}
 
 In order to solve this task, I decided to implement a ring buffer.
 A ring buffer can be implemented by creating a plain array with a fixed capacity (in this case 2 elements)
@@ -34,7 +34,20 @@ iterator class for the ring buffer.
 
 \section*{Keypoints}
 \subsection*{MP.2 Keypoint Detection}
+\textcolor{gray}{\textit{Implement detectors HARRIS, FAST, BRISK, ORB, AKAZE, and SIFT and make them selectable by setting a string accordingly.}}
+
+I implemented the selection via string by creating an if-else branch (with lots of else cases).
+The last else makes sure that a valid keypoint detector has been selected.
+
+In each branch, the respective keypoint detection function is used.
+For the actual keypoint detection, I used the functions which are already provided in the OpenCV
+and stayed closely to the preceding exercises.
+When parameters had to be chose for the detectors, I used those from the preceding exercises.
+
 \subsection*{MP.3 Keypoint Removal}
+\textcolor{gray}{\textit{Remove all keypoints outside of a pre-defined rectangle and only use the keypoints within the rectangle for further processing.}}
+
+
 
 \section*{Descriptors}
 \subsection*{MP.4 Keypoint Descriptors}
