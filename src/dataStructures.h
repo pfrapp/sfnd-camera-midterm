@@ -47,7 +47,6 @@ class RingBuffer {
         // Free all remaining entries.
         for (int ii=0; ii<capacity_; ii++) {
             if (data_[ii] != nullptr) {
-                std::cout << "Deleting remaining entry with value " << (*data_[ii]) << "\n";
                 delete data_[ii];
                 data_[ii] = nullptr;
             }
@@ -113,9 +112,6 @@ class RingBuffer {
         int next = (first_ + size_) % capacity_;
         data_[next] = new T(new_entry);
         size_++;
-
-        std::cout << "Added new entry with value " << new_entry << " in ringbuffer at position " << next << "\n";
-        std::cout << "Size is now " << size_ << " and first is " << first_ << "\n";
     }
 
     // Remove the oldest element from the front.
@@ -125,12 +121,10 @@ class RingBuffer {
             return;
         }
         // Pop it away.
-        std::cout << "Deleting entry at position " << first_ << " with value " << (*data_[first_]) << "\n";
         delete data_[first_];
         data_[first_] = nullptr;
         first_ = (first_ + 1) % capacity_;
         size_--;
-        std::cout << "Size is now " << size_ << " and first is " << first_ << "\n";
     }
 
     iterator begin() {
@@ -155,49 +149,6 @@ class RingBuffer {
 
 };
 
-inline void test_ringbuffer() {
-    RingBuffer<double, 5> rb;
-
-    rb.push_back(3.0);
-    rb.push_back(8.0);
-
-    std::cout << "Current content of the ringbuffer:\n";
-    for (RingBuffer<double, 5>::iterator it = rb.begin(); it != rb.end(); ++it) {
-        std::cout << "* " << (*it) << "\n";
-    }
-
-    rb.pop_front();
-    rb.push_back(12.0);
-    rb.push_back(-12.0);
-    rb.push_back(-1.0);
-    rb.push_back(3.14);
-
-    std::cout << "Current content of the ringbuffer:\n";
-    for (double d : rb) {
-        std::cout << "* " << d << "\n";
-    }
-
-    rb.push_back(20.0);
-    rb.push_back(30.0);
-    rb.push_back(40.0);
-    rb.push_back(50);
-
-    std::cout << "Ringbuffer size = " << rb.size() << "\n";
-
-    std::cout << "Current content of the ringbuffer:\n";
-    for (double d : rb) {
-        std::cout << "* " << d << "\n";
-    }
-    std::cout << "Current content of the ringbuffer:\n";
-    for (int ii=0; ii<rb.size(); ii++) {
-        std::cout << "* " << rb[ii] << "\n";
-    }
-
-    rb.pop_front();
-    rb.pop_front();
-    std::cout << "Ringbuffer size = " << rb.size() << "\n";
-
-}
 
 
 #endif /* dataStructures_h */
