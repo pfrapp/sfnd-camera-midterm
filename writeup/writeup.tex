@@ -1,6 +1,7 @@
 \documentclass[a4paper]{scrartcl}
 
 \usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{amsmath,amssymb,amsfonts}
 
 \title{Camera Based 2D Feature Tracking ReadMe}
 \author{Philipp Rapp}
@@ -76,8 +77,30 @@ in the respective create method.
 \subsection*{MP.5 Descriptor Matching}
 \textcolor{gray}{\textit{Implement FLANN matching as well as k-nearest neighbor selection. Both methods must be selectable using the respective strings in the main function.}}
 
+In order to implement FLANN, I used the \texttt{FlannBasedMatcher} which is available in OpenCV.
+It is important to ensure that the data type of the matrices which contain the
+descriptor data are of single-precision (32-bit) floating point.
+
+In order to address the k-nearest neighbor selection, I first made sure that cross checking is disabled,
+as it turned out that this cannot be combined with KNN (an error is thrown otherwise).
+Then I took advantage of the \texttt{knnMatch} method provided by OpenCV, which
+does the actual KNN matching.
+All you need to provide are the descriptors for query (source) and train (reference),
+the value k (in this case 2), and a vector of type \texttt{DMatch}.
+
 
 \subsection*{MP.6 Descriptor Distance Ratio}
+\textcolor{gray}{\textit{Use the K-Nearest-Neighbor matching to implement the descriptor distance ratio test, which looks at the ratio of best vs. second-best match to decide whether to keep an associated pair of keypoints.}}
+
+As the distances~$d_i$ are already sorted by \texttt{knnMatch} in the distance increasing order (according to the
+OpenCV documentation), the distance ratio~$\rho$ can be computed according to
+\begin{equation}
+	\rho = \frac{d_0}{d_1}.
+\end{equation}
+We have $0 \le \rho \le 1.0$.
+All KNN matches where $\rho \le \rho_\text{threshold}$ holds true
+are pushed in the vector containing the final matches.
+In our case, $\rho_\text{threshold} = 0.8$.
 
 \section*{Performance}
 \subsection*{MP.7 Performance Evaluation 1}
