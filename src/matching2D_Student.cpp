@@ -13,12 +13,24 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
 
     if (matcherType.compare("MAT_BF") == 0)
     {
-        int normType = cv::NORM_HAMMING;
+        // int normType = cv::NORM_HAMMING;
+        int normType = descriptorType.compare("DES_BINARY") == 0 ? cv::NORM_HAMMING : cv::NORM_L2;
         matcher = cv::BFMatcher::create(normType, crossCheck);
+        cerr << "Brute-force matching\n";
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
     {
-        // ...
+        if (descSource.type() != CV_32F)
+        { // OpenCV bug workaround : convert binary descriptors to floating point due to a bug in current OpenCV implementation
+            descSource.convertTo(descSource, CV_32F);
+        }
+        if (descRef.type() != CV_32F)
+        { // OpenCV bug workaround : convert binary descriptors to floating point due to a bug in current OpenCV implementation
+            descRef.convertTo(descRef, CV_32F);
+        }
+
+        matcher = cv::FlannBasedMatcher::create();
+        cerr << "FLANN matching\n";
     }
 
     // perform matching task
@@ -30,7 +42,34 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     else if (selectorType.compare("SEL_KNN") == 0)
     { // k nearest neighbors (k=2)
 
-        // ...
+        // KNN only works with cross-checking being deactivated.
+        if (crossCheck) {
+            std::cerr << "\n\n*** You need to deactivate crossCheck if you use SEL_KNN! Aborting...\n";
+            return;
+        }
+
+        // We need a vector of vector of cv::DMatch.
+        std::vector<std::vector<cv::DMatch>> matches_knn;
+        int k = 2;
+        float distance_threshold = 0.8f;
+        // query is source, train is reference
+        matcher->knnMatch(descSource, descRef, matches_knn, k);
+
+        // Filter matches using descriptor distance ratio test.
+        // Have a look here:
+        // https://www.uio.no/studier/emner/matnat/its/TEK5030/v19/lect/lecture_4_2_feature_matching.pdf
+        // Slide on page 12
+        float distance_ratio;
+        for (const std::vector<cv::DMatch> &m : matches_knn) {
+            float distance_ratio = m[0].distance / m[1].distance;
+            if (distance_ratio <= distance_threshold) {
+                matches.push_back(m[0]);
+            }
+        }
+
+        cout << "Filtering the KNN matches with a distance threshold of " << distance_threshold
+            << " results in keeping " << matches.size() << " out of " << matches_knn.size() << " matches ("
+            << ((float) matches.size() / (float) matches_knn.size() * 100.0f) << "%).\n";
     }
 }
 
