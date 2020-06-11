@@ -83,6 +83,16 @@ class RingBuffer {
             return *this;
         }
 
+        // Addition and subtraction
+        iterator operator+(int offset) {
+            iterator it(rb_, index_ + offset);
+            return it;
+        }
+        iterator operator-(int offset) {
+            iterator it(rb_, index_ - offset);
+            return it;
+        }
+
         // Check for equality
         bool operator==(const iterator& it) { return this->index_ == it.index_; }
         bool operator!=(const iterator& it) { return !(this->operator==(it)); }
