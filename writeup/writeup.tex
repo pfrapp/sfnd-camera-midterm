@@ -239,6 +239,24 @@ The average processing time (per image frame) for keypoint detection plus descri
 is shown in Tables~\ref{tab:performance_3}
 for all valid detector and descriptor combinations.
 
+In my opinion, the TOP3 detector / descriptor combinations for the purpose
+of detection keypoints on a vehicle for designing a collision avoidance system
+are
+\begin{enumerate}
+	\item FAST keypoint detector with BRIEF descriptor
+	\item FAST keypoint detector with ORB descriptor
+	\item FAST keypoint detector with BRISK descriptor
+\end{enumerate}
+The reason is that speed is very important, especially for an automotive application,
+where the electronic control unit is usually of limited computational power.
+Apart from that, a collision avoidance system needs to react very fast.
+Those TOP3 combinations, which have been selected solely on computational speed,
+also have enough keypoints (around 1000), as can be seen in Table~\ref{tab:performance_2}.
+(In reality, we would also need to check the quality of the keypoints, that is, how
+well they lend themselves for a high number of true positive and a low number of false positive
+matches).
+
+
 \begin{table}
 	\caption{Average processing time for keypoint detection plus descriptor computation
 		per image frame in milliseconds.
