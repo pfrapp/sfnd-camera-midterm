@@ -254,7 +254,7 @@ class PerformanceEvaluation {
             std::cout << "\nMP.9 Performance Evaluation 3:\n";
             std::cout << "Average processing time for keypoint detection (per image): " << 1000.0 * total_detector_time_ / ((float) image_count_) << " ms\n";
             std::cout << "Average processing time for descriptor computation (per image): " << 1000.0 * total_descriptor_time_ / ((float) image_count_) << " ms\n";
-            std::cout << "Combined average processing time (per image): " << 1000.0 * (total_descriptor_time_+total_descriptor_time_) / ((float) image_count_) << " ms\n";
+            std::cout << "Combined average processing time (per image): " << 1000.0 * (total_detector_time_+total_descriptor_time_) / ((float) image_count_) << " ms\n";
         }
 
         // Write a JPG image of the detected keypoints within the image.
