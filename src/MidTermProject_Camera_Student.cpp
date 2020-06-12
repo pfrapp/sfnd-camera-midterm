@@ -86,31 +86,33 @@ int main(int argc, const char *argv[])
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
         //// -> HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
 
+        double processing_time = 0.0;
         if (detectorType.compare("SHITOMASI") == 0) {
-            detKeypointsShiTomasi(keypoints, imgGray, false);
+            detKeypointsShiTomasi(keypoints, imgGray, processing_time, false);
         }
         else if (detectorType.compare("HARRIS") == 0) {
-            detKeypointsHarris(keypoints, imgGray, false);
+            detKeypointsHarris(keypoints, imgGray, processing_time, false);
         }
         else if (detectorType.compare("FAST") == 0) {
-            detKeypointsFast(keypoints, imgGray, false);
+            detKeypointsFast(keypoints, imgGray, processing_time, false);
         }
         else if (detectorType.compare("BRISK") == 0) {
-            detKeypointsBrisk(keypoints, imgGray, false);
+            detKeypointsBrisk(keypoints, imgGray, processing_time, false);
         }
         else if (detectorType.compare("ORB") == 0) {
-            detKeypointsOrb(keypoints, imgGray, false);
+            detKeypointsOrb(keypoints, imgGray, processing_time, false);
         }
         else if (detectorType.compare("AKAZE") == 0) {
-            detKeypointsAkaze(keypoints, imgGray, false);
+            detKeypointsAkaze(keypoints, imgGray, processing_time, false);
         }
         else if (detectorType.compare("SIFT") == 0) {
-            detKeypointsSift(keypoints, imgGray, false);
+            detKeypointsSift(keypoints, imgGray, processing_time, false);
         } else {
             std::cerr << "\n *** Error: You requested an invalid keypoint detector by providing " << detectorType;
             std::cerr << "\n *** Allowed keypoint detectors are: SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT\n\n";
             return -1;
         }
+        performance_eval.addDetectorTime(processing_time);
         //// EOF STUDENT ASSIGNMENT
 
         //// STUDENT ASSIGNMENT
@@ -168,7 +170,9 @@ int main(int argc, const char *argv[])
         }
         performance_eval.descriptorType(descriptorType);
         DescriptorType dt;
-        descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType, dt);
+        processing_time = 0.0;
+        descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType, dt, processing_time);
+        performance_eval.addDescriptorTime(processing_time);
         //// EOF STUDENT ASSIGNMENT
 
         // push descriptors for current frame to end of data buffer

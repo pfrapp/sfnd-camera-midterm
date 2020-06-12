@@ -186,6 +186,10 @@ class PerformanceEvaluation {
     std::vector<cv::KeyPoint> all_keypoints_;
     // Total number of matched keypoints.
     int total_number_matched_keypoints_{0};
+    // Total processing time (in seconds) for the keypoint detection.
+    double total_detector_time_{0.0};
+    // Total processing time (in seconds) for the descriptor computation.
+    double total_descriptor_time_{0.0};
 
     public:
         int imageCount() const { return image_count_; }
@@ -207,6 +211,16 @@ class PerformanceEvaluation {
         // Add a number of matched keypoints (do not add the actual matches, only their count).
         void addMatchedKeypoints(int count) {
             total_number_matched_keypoints_ += count;
+        }
+
+        // Add processing time for the keypoint detection.
+        void addDetectorTime(double time_in_sec) {
+            total_detector_time_ += time_in_sec;
+        }
+
+        // Add processing time for the descriptor computation.
+        void addDescriptorTime(double time_in_sec) {
+            total_descriptor_time_ += time_in_sec;
         }
 
         // Print the statistics to the console.
@@ -238,7 +252,9 @@ class PerformanceEvaluation {
             std::cout << "Total number of matched keypoints: " << total_number_matched_keypoints_ << "\n";
 
             std::cout << "\nMP.9 Performance Evaluation 3:\n";
-            std::cout << "Time it took...\n";
+            std::cout << "Average processing time for keypoint detection (per image): " << 1000.0 * total_detector_time_ / ((float) image_count_) << " ms\n";
+            std::cout << "Average processing time for descriptor computation (per image): " << 1000.0 * total_descriptor_time_ / ((float) image_count_) << " ms\n";
+            std::cout << "Combined average processing time (per image): " << 1000.0 * (total_descriptor_time_+total_descriptor_time_) / ((float) image_count_) << " ms\n";
         }
 
         // Write a JPG image of the detected keypoints within the image.

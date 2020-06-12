@@ -229,5 +229,34 @@ in conjunction with the ORB descriptor, as OpenCV raises an error in this case.
 \subsection*{MP.9 Performance Evaluation 3}
 \textcolor{gray}{\textit{Log the time it takes for keypoint detection and descriptor extraction. The results must be entered into a spreadsheet and based on this data, the TOP3 detector / descriptor combinations must be recommended as the best choice for our purpose of detecting keypoints on vehicles.}}
 
+In order to complete this task, I extended my performance evaluation by means of measuring the time.
+Actually, the time is already measured in the functions which detect the keypoints and compute
+the descriptors. I only need to add them to the performance evaluation class and output the results.
+Again, in order to allow for batch processing without the need for recompiling,
+I created a shell script \texttt{performance\_eval\_03.sh}.
+
+The average processing time (per image frame) for keypoint detection plus descriptor computation
+is shown in Tables~\ref{tab:performance_3}
+for all valid detector and descriptor combinations.
+
+\begin{table}
+	\caption{Average processing time for keypoint detection plus descriptor computation
+		per image frame in milliseconds.
+		The rows are the detectors, and the columns are the descriptors.}
+	\label{tab:performance_3}
+	\begin{tabular}{l||r|r|r|r|r|r}
+		 			& BRISK & BRIEF & ORB & FREAK 	& AKAZE & SIFT		\\
+		\hline \hline
+		SHITOMASI 	& 2.73	& 1.12	& 1.27	& 35.04	& N/A 	& 21.29 	\\
+		HARRIS 		& 1.31	& 0.86	& 1.17	& 34.21	& N/A 	& 18.23 	\\
+		FAST 		& 2.79	& 0.85	& 1.40	& 35.10	& N/A 	& 23.94 	\\
+		BRISK 		& 4.74	& 1.35 	& 6.68	& 43.43	& N/A 	& 72.17 	\\
+		ORB 		& 2.27	& 0.65	& 6.00	& 34.37	& N/A 	& 72.06 	\\
+		AKAZE 		& 4.87	& 2.30	& 4.16	& 44.07	& 82.61	& 37.85 	\\
+		SIFT 		& 4.03	& 1.22	& N/A 	& 47.44	& N/A 	& 120.21 	\\
+		\hline
+	\end{tabular}
+\end{table}
+
 
 \end{document}
