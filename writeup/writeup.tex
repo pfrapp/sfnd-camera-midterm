@@ -113,6 +113,11 @@ we do not take accuracy or the receiver operating characteristic (ROC) into acco
 In order to complete this task, I added a command line argument which allows for the
 specification of the keypoint detector. That way, it is not necessary to recompile the program
 in order to change the detector.
+I also created the shell script \texttt{performance\_eval\_01.sh} which allows for
+batch processing.
+On top of that, I added the class \texttt{PerformanceEvaluation} in order
+to keep all performance evaluation related code in one place and not too clutter
+the main program too much.
 
 Furthermore, I keep track of all keypoints for all 10 images and compute the mean as well
 as the standard deviation of their size in order to assess the distribution of the
@@ -183,6 +188,13 @@ as well as in Figures~\ref{fig:shi_tomasi_keypoints} to \ref{fig:sift_keypoints}
 
 \subsection*{MP.8 Performance Evaluation 2}
 \textcolor{gray}{\textit{Count the number of matched keypoints for all 10 images using all possible combinations of detectors and descriptors. In the matching step, the BF approach is used with the descriptor distance ratio set to 0.8.}}
+
+In order to complete this task, I added a second command line argument which allows for the
+specification of the descriptor. That way, it is not necessary to recompile the program
+in order to change the descriptor.
+I also created the shell script \texttt{performance\_eval\_02.sh} which allows for
+batch processing.
+I also took advantage of my \texttt{PerformanceEvaluation} class again.
 
 The number of \emph{matched keypoints} for all 10 images (in total)
 is depicted in Table~\ref{tab:performance_2}.
