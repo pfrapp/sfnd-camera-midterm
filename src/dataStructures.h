@@ -2,6 +2,7 @@
 #define dataStructures_h
 
 #include <vector>
+#include <numeric>      // for std::accumulate
 #include <opencv2/core.hpp>
 
 
@@ -171,6 +172,90 @@ class RingBuffer {
 
 };
 
+// In order to work on the performance evaluation tasks MP.7 - MP.9
+// in a clean and efficient manner, a class is created which
+// encapsulates the interesting quantities.
+class PerformanceEvaluation {
+    // Total number of images from which the keypoints or matches originate.
+    int image_count_{0};
+    // Detector type
+    std::string detector_type_;
+    // Descriptor type
+    std::string descriptor_type_;
+    // All keypoints ('all' meaning: collected over the images)
+    std::vector<cv::KeyPoint> all_keypoints_;
+    // Total number of matched keypoints.
+    int total_number_matched_keypoints_{0};
 
+    public:
+        int imageCount() const { return image_count_; }
+        void imageCount(int ic) { image_count_ = ic; }
+
+        const std::string& detectorType() { return detector_type_; }
+        void detectorType(const std::string& dt) { detector_type_ = dt; }
+
+        const std::string& descriptorType() { return descriptor_type_; }
+        void descriptorType(const std::string& dt) { descriptor_type_ = dt; }
+
+        // Add keypoints to the vector of keypoints
+        void addKeypoints(const std::vector<cv::KeyPoint> &keypoints) {
+            for (const cv::KeyPoint &kpt : keypoints) {
+                all_keypoints_.push_back(kpt);
+            }
+        }
+
+        // Add a number of matched keypoints (do not add the actual matches, only their count).
+        void addMatchedKeypoints(int count) {
+            total_number_matched_keypoints_ += count;
+        }
+
+        // Print the statistics to the console.
+        // You can use this output for easy 'grep'-ing the data
+        // for the writeup/readme.
+        void printStatistics() const {
+
+            std::cout << "\n===== Performance statistics summary =====\n";
+            std::cout << "There have been " << image_count_ << " images.\n";
+            std::cout << "Detector: " << detector_type_ << ", Descriptor: " << descriptor_type_ << "\n";
+
+            std::cout << "\nMP.7 Performance Evaluation 1:\n";
+            float avg_num_keypoints_per_image = (float) all_keypoints_.size() / ((float) image_count_);
+            std::cout << "Average number of keypoints (on the vehicle) per image: " << avg_num_keypoints_per_image << "\n";
+            // Compute the mean of the keypoint size.
+            float avg_size = std::accumulate(all_keypoints_.begin(), all_keypoints_.end(), 0.0f, [](const float &val, const cv::KeyPoint &kpt) {
+                    return (val + kpt.size);
+                }) / ((float) all_keypoints_.size());
+            // Compute the sample standard deviation of the keypoint size. See for instance here:
+            // https://www.statisticshowto.com/probability-and-statistics/descriptive-statistics/sample-variance/
+            float std_dev_size = std::accumulate(all_keypoints_.begin(), all_keypoints_.end(), 0.0f, [&avg_size](const float &val, const cv::KeyPoint &kpt) {
+                    return (val + (kpt.size - avg_size) * (kpt.size - avg_size));
+                }) / ((float) (all_keypoints_.size() - 1));
+            std_dev_size = std::sqrt(std_dev_size);
+            std::cout << "Average size of the keypoints (on the vehicle): " << avg_size << "\n";
+            std::cout << "Size of the keypoints (on the vehicle) standard deviation: " << std_dev_size << "\n";
+
+            std::cout << "\nMP.8 Performance Evaluation 2:\n";
+            std::cout << "Total number of matched keypoints: " << total_number_matched_keypoints_ << "\n";
+
+            std::cout << "\nMP.9 Performance Evaluation 3:\n";
+            std::cout << "Time it took...\n";
+        }
+
+        // Write a JPG image of the detected keypoints within the image.
+        // Path is the path of the folder where the file is stored.
+        // The file itself is called <detector_type_>.jpg, for instance, HARRIS.jpg.
+        void writeImage(const std::string& path, const cv::Mat &img, const std::vector<cv::KeyPoint> &keypoints, bool show_window = false) const {
+            cv::Mat visImage = img.clone();
+            cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+            cv::imwrite(path + detector_type_ + ".jpg", visImage);
+            if (show_window) {
+                std::string windowName = detector_type_ + " Results";
+                cv::namedWindow(windowName, 6);
+                imshow(windowName, visImage);
+                cv::waitKey(0);
+            }
+        }
+
+};
 
 #endif /* dataStructures_h */
