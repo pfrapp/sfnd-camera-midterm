@@ -1,5 +1,7 @@
 # SFND 2D Feature Tracking
 
+Note: The writeup / readme as required by the project rubric is located at in writeup/writeup.pdf.
+
 <img src="images/keypoints.png" width="820" height="248" />
 
 The idea of the camera course is to build a collision detection system - that's the overall goal for the Final Project. As a preparation for this, you will now build the feature tracking part and test various detector / descriptor combinations to see which ones perform best. This mid-term project consists of four parts:
